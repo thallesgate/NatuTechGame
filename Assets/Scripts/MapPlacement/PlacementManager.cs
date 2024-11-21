@@ -4,6 +4,7 @@ using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlacementManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlacementManager : MonoBehaviour
     private ARPlaneManager arPlaneManager;
     private ARRaycastManager arRaycastManager;
     private Camera arCamera;
+    [SerializeField] private float delayTime = 2.0f;
 
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
     private float currentDistance;
@@ -51,8 +53,7 @@ public class PlacementManager : MonoBehaviour
         indicatorBlockedInstance.SetActive(false); // Hide initially
 
         tap = InputSystem.actions.FindAction("Spawn Object");
-        tap.Enable();
-        tap.performed += OnClick;
+        StartCoroutine(EnableInputAfterDelay());
     }
     
     void Update()
@@ -65,6 +66,12 @@ public class PlacementManager : MonoBehaviour
         tap.performed -= OnClick;
     }
 
+    private IEnumerator EnableInputAfterDelay()
+    {
+        yield return new WaitForSeconds(delayTime);
+        tap.Enable();
+        tap.performed += OnClick;
+    }
     void UpdatePlacementPose()
     {
         // Use the center of the screen as the touch point

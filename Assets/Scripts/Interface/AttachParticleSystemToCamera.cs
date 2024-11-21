@@ -3,6 +3,7 @@ using UnityEngine;
 public class AttachParticleSystemToCamera : MonoBehaviour
 {
     public ParticleSystem particlePrefab; // Assign your Particle System prefab in the Inspector
+    [SerializeField] private bool deleteOnDestroy = true;
     private ParticleSystem spawnedParticleSystem;
     private GameObject arCamera;
     void Start()
@@ -25,7 +26,7 @@ public class AttachParticleSystemToCamera : MonoBehaviour
     void OnDestroy()
     {
         // Destroy the spawned particle system
-        if (spawnedParticleSystem != null)
+        if (spawnedParticleSystem != null && deleteOnDestroy)
         {
             Destroy(spawnedParticleSystem.gameObject);
         }
