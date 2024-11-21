@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -5,13 +7,14 @@ public class HomeScreenController : MonoBehaviour
 {
     [SerializeField] private InputAction tap;
     [SerializeField] private string sceneToLoad = "PlacementScene";
+    [SerializeField] private float delayTime = 2.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         tap = InputSystem.actions.FindAction("Spawn Object");
-        tap.Enable();
-        tap.performed += OnClick;
-        
+        StartCoroutine(EnableInputAfterDelay());
+
         //tap.canceled += OnClick;
     }
     void OnDestroy()
@@ -19,12 +22,12 @@ public class HomeScreenController : MonoBehaviour
         tap.performed -= OnClick;
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator EnableInputAfterDelay()
     {
-        
+        yield return new WaitForSeconds(delayTime);
+        tap.Enable();
+        tap.performed += OnClick;
     }
-
     private void OnClick(InputAction.CallbackContext context)
     {
         //if (tap.ReadValue<bool>())
